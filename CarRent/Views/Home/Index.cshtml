@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Welcome To CarRent";
+}
+
+<div class="text-center mt-5">
+    <h1>Welcome to CarRent</h1>
+    <p>Your trusted car rental service!</p>
+    <p>Choose from a wide selection of cars for your perfect journey.</p>
+    <a class="btn btn-primary btn-lg mt-3" asp-controller="Cars" asp-action="Index">Explore Cars</a>
+</div>
+
+<div class="mt-5">
+    <h2>Popular Cars</h2>
+    <div class="row mt-4">
+        <!-- Card 1 -->
+        <div class="col-md-4">
+            <div class="card">
+                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Car Image">
+                <div class="card-body">
+                    <h5 class="card-title">Toyota Corolla</h5>
+                    <p class="card-text">Reliable and fuel-efficient, perfect for city trips.</p>
+                    <a class="btn btn-primary" asp-controller="Cars" asp-action="Details" asp-route-id="1">Details</a>
+                </div>
+            </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="col-md-4">
+            <div class="card">
+                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Car Image">
+                <div class="card-body">
+                    <h5 class="card-title">Ford Mustang</h5>
+                    <p class="card-text">Experience the thrill with this powerful sports car.</p>
+                    <a class="btn btn-primary" asp-controller="Cars" asp-action="Details" asp-route-id="2">Details</a>
+                </div>
+            </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="col-md-4">
+            <div class="card">
+                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Car Image">
+                <div class="card-body">
+                    <h5 class="card-title">Tesla Model 3</h5>
+                    <p class="card-text">Drive into the future with this electric beauty.</p>
+                    <a class="btn btn-primary" asp-controller="Cars" asp-action="Details" asp-route-id="3">Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
