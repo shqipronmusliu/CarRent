@@ -12,5 +12,18 @@ namespace CarRent.Data
         }
         public DbSet<Car> Cars { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<CarRent.Models.Employee> Employee { get; set; } = default!;
+        public DbSet<Salary> Salaries{ get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2); 
+        }
+
     }
 }
