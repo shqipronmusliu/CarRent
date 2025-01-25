@@ -15,6 +15,12 @@ namespace CarRent.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<CarRent.Models.Employee> Employee { get; set; } = default!;
         public DbSet<Salary> Salaries{ get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<Incident> Incidents{ get; set; }
+        public DbSet<Discount> Discounts { get; set; }
+
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,8 +28,23 @@ namespace CarRent.Data
 
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
-                .HasPrecision(18, 2); 
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Salary>()
+               .Property(s => s.Amount)
+               .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Service>()
+                .Property(s => s.Price)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Discount>()
+                .Property(d => d.DiscountAmount)
+                .HasPrecision(18, 2);
+
         }
+        public DbSet<CarRent.Models.Incident> Incident_1 { get; set; } = default!;
+       
 
     }
 }
