@@ -1,21 +1,32 @@
+﻿using CarRent.Data;
+using System.Linq;
 using CarRent.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace CarRent.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task <IActionResult> Index()
         {
-            return View();
+            var recentCars = await _context.Cars
+            .OrderByDescending(c => c.Id)
+            .Take(3) 
+            .ToListAsync();
+
+            return View(recentCars);
         }
 
         public IActionResult Privacy()

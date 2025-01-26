@@ -11,6 +11,14 @@ namespace CarRent.Data
         {
         }
         public DbSet<Car> Cars { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Car>()
+                .Property(c => c.Price)
+                .HasColumnType("decimal(18,2)");
+        }
     }
 }

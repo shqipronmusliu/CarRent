@@ -10,11 +10,15 @@ namespace CarRent
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
@@ -22,6 +26,7 @@ namespace CarRent
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddRazorPages();
+
 
 
             var app = builder.Build();
@@ -65,21 +70,40 @@ namespace CarRent
 
             using (var scope = app.Services.CreateScope())
             {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager =
                     scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-                string email = "admin@email.com";
-                string password = "Admin123@";
-
-                if(await userManager.FindByEmailAsync(email) == null)
+                try
                 {
-                    var user = new IdentityUser();
-                    user.UserName = email;
-                    user.Email = email;
+                    var roles = new[] { "Admin", "User" };
+                    foreach (var role in roles)
+                    {
+                        if (!await roleManager.RoleExistsAsync(role))
+                            await roleManager.CreateAsync(new IdentityRole(role));
+                    }
 
-                    await userManager.CreateAsync(user, password);
+                    string email = "admin@email.com";
+                    string password = "Admin123@";
 
-                    await userManager.AddToRoleAsync(user, "Admin");
+                    if (await userManager.FindByEmailAsync(email) == null)
+                    {
+                        var adminUser = new IdentityUser
+                        {
+                            UserName = email,
+                            Email = email
+                        };
+
+                        var result = await userManager.CreateAsync(adminUser, password);
+                        if (result.Succeeded)
+                        {
+                            await userManager.AddToRoleAsync(adminUser, "Admin");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error setting up roles and admin: {ex.Message}");
                 }
 
             }

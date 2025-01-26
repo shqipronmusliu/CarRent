@@ -2,27 +2,27 @@
 
 #nullable disable
 
-namespace CarRent.Data.Migrations
+namespace CarRent.Migrations
 {
     /// <inheritdoc />
-    public partial class InitalCreate : Migration
+    public partial class SecondCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "CarPhotoPath",
+            migrationBuilder.AddColumn<bool>(
+                name: "IsReserved",
                 table: "Cars",
-                type: "nvarchar(max)",
+                type: "bit",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: false);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CarPhotoPath",
+                name: "IsReserved",
                 table: "Cars");
         }
     }
