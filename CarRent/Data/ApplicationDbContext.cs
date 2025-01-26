@@ -14,9 +14,9 @@ namespace CarRent.Data
 
         public DbSet<Payment> Payments { get; set; }
         public DbSet<CarRent.Models.Employee> Employee { get; set; } = default!;
-        public DbSet<Salary> Salaries{ get; set; }
+        public DbSet<Salary> Salaries { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<Incident> Incidents{ get; set; }
+        public DbSet<Incident> Incidents { get; set; }
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Booking> Bookings { get; set; }
@@ -27,7 +27,6 @@ namespace CarRent.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
 
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Cars)

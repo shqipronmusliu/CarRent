@@ -12,23 +12,25 @@ using Microsoft.AspNetCore.Authorization;
 namespace CarRent.Controllers
 {
     [Authorize]
-    public class IncidentsController : Controller
+    public class SalariesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<SalariesController> _logger;
 
-        public IncidentsController(ApplicationDbContext context)
+        public SalariesController(ApplicationDbContext context, ILogger<SalariesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        // GET: Incidents
+        // GET: Salaries
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Incident_1.Include(i => i.Service);
+            var applicationDbContext = _context.Salaries.Include(s => s.Employee);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Incidents/Details/5
+        // GET: Salaries/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,42 +38,42 @@ namespace CarRent.Controllers
                 return NotFound();
             }
 
-            var incident = await _context.Incident_1
-                .Include(i => i.Service)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (incident == null)
+            var salary = await _context.Salaries
+                .Include(s => s.Employee)
+                .FirstOrDefaultAsync(m => m.EmployeeId == id);
+            if (salary == null)
             {
                 return NotFound();
             }
 
-            return View(incident);
+            return View(salary);
         }
 
-        // GET: Incidents/Create
+        // GET: Salaries/Create
         public IActionResult Create()
         {
-            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name");
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Email");
             return View();
         }
 
-        // POST: Incidents/Create
+        // POST: Salaries/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,IncidentDate,Severity,ServiceId,ReportedBy,ResolvedBy")] Incident incident)
+        public async Task<IActionResult> Create([Bind("EmployeeId,Amount,PaymentDate")] Salary salary)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(incident);
+                _context.Add(salary);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name", incident.ServiceId);
-            return View(incident);
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "Id", "Email", salary.EmployeeId);
+            return View(salary);
         }
 
-        // GET: Incidents/Edit/5
+        // GET: Salaries/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -79,23 +81,25 @@ namespace CarRent.Controllers
                 return NotFound();
             }
 
-            var incident = await _context.Incident_1.FindAsync(id);
-            if (incident == null)
+            var salary = await _context.Salaries
+                .FirstOrDefaultAsync(s => s.EmployeeId == id);
+
+            if (salary == null)
             {
                 return NotFound();
             }
-            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name", incident.ServiceId);
-            return View(incident);
+
+            return View(salary);
         }
 
-        // POST: Incidents/Edit/5
+        // POST: Salaries/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,IncidentDate,Severity,ServiceId,ReportedBy,ResolvedBy")] Incident incident)
+        public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,Amount,PaymentDate")] Salary salary)
         {
-            if (id != incident.Id)
+            if (id != salary.EmployeeId)
             {
                 return NotFound();
             }
@@ -104,27 +108,33 @@ namespace CarRent.Controllers
             {
                 try
                 {
-                    _context.Update(incident);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!IncidentExists(incident.Id))
+                    var existingSalary = await _context.Salaries
+                        .FirstOrDefaultAsync(s => s.EmployeeId == id);
+
+                    if (existingSalary == null)
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    existingSalary.Amount = salary.Amount;
+                    existingSalary.PaymentDate = salary.PaymentDate;
+
+                    _context.Update(existingSalary);
+                    await _context.SaveChangesAsync(); 
+
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error saving changes: {ex.Message}");
+                }
             }
-            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name", incident.ServiceId);
-            return View(incident);
+
+            return View(salary);
         }
 
-        // GET: Incidents/Delete/5
+
+
+        // GET: Salaries/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -132,35 +142,35 @@ namespace CarRent.Controllers
                 return NotFound();
             }
 
-            var incident = await _context.Incident_1
-                .Include(i => i.Service)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (incident == null)
+            var salary = await _context.Salaries
+                .Include(s => s.Employee)
+                .FirstOrDefaultAsync(m => m.EmployeeId == id);
+            if (salary == null)
             {
                 return NotFound();
             }
 
-            return View(incident);
+            return View(salary);
         }
 
-        // POST: Incidents/Delete/5
+        // POST: Salaries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var incident = await _context.Incident_1.FindAsync(id);
-            if (incident != null)
+            var salary = await _context.Salaries.FindAsync(id);
+            if (salary != null)
             {
-                _context.Incident_1.Remove(incident);
+                _context.Salaries.Remove(salary);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool IncidentExists(int id)
+        private bool SalaryExists(int id)
         {
-            return _context.Incident_1.Any(e => e.Id == id);
+            return _context.Salaries.Any(e => e.EmployeeId == id);
         }
     }
 }

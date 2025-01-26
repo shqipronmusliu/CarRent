@@ -5,7 +5,7 @@ namespace CarRent.Models
 {
     public class Salary
     {
-        [Key, ForeignKey("Employee")] // EmployeeId është Primary Key dhe Foreign Key
+        [Key, ForeignKey("Employee")]
         public int EmployeeId { get; set; }
 
         [Required(ErrorMessage = "Salary amount is required.")]
@@ -17,6 +17,6 @@ namespace CarRent.Models
         public DateTime PaymentDate { get; set; }
 
         // Navigation property for Employee
-        public required Employee Employee { get; set; }
+        public Employee? Employee { get; set; }
     }
 }

@@ -20,11 +20,16 @@ html {
 body {
   margin-bottom: 60px;
 }
+
 img{
     height:200px;
     object-fit:cover;
 }
+<<<<<<< HEAD
 .navbar-nav .nav-item .nav-link.active {
     font-weight: bold;
     color: #007bff; 
 }
+=======
+
+>>>>>>> a6e8a07609006eacabbabc778c0819453809e990

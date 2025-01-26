@@ -11,8 +11,9 @@ namespace CarRent
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Logging.ClearProviders();
-            builder.Logging.AddConsole();
+            builder.Logging.ClearProviders(); 
+            builder.Logging.AddConsole(); 
+            builder.Logging.AddDebug();
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
