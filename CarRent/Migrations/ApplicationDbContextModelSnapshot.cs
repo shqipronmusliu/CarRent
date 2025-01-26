@@ -4,8 +4,6 @@ using CarRent.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -13,12 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRent.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250125214049_FifthCreate")]
-    partial class FifthCreate
-    {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -39,7 +32,6 @@ namespace CarRent.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -65,24 +57,12 @@ namespace CarRent.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Price")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Cars");
                 });
 
-            modelBuilder.Entity("CarRent.Models.Customer", b =>
+            modelBuilder.Entity("CarRent.Models.Discount", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,24 +70,24 @@ namespace CarRent.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("DiscountAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<string>("DiscountCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("DiscountDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double?>("DiscountPercentage")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("CarRent.Models.Employee", b =>
@@ -176,7 +156,7 @@ namespace CarRent.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Incident_1");
+                    b.ToTable("Incident");
                 });
 
             modelBuilder.Entity("CarRent.Models.Payment", b =>
@@ -248,8 +228,6 @@ namespace CarRent.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Service");
-                });
                     b.ToTable("Services");
                 });
 
@@ -317,11 +295,6 @@ namespace CarRent.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -373,10 +346,6 @@ namespace CarRent.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator().HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -464,16 +433,6 @@ namespace CarRent.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CarRent.Models.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
-
             modelBuilder.Entity("CarRent.Models.Incident", b =>
                 {
                     b.HasOne("CarRent.Models.Service", "Service")
@@ -494,7 +453,6 @@ namespace CarRent.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
-
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

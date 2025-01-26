@@ -7,7 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CarRent.Data;
 using CarRent.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using X.PagedList;
+using X.PagedList.Mvc.Core;
 
 namespace CarRent.Controllers
 {
@@ -22,9 +26,27 @@ namespace CarRent.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, int? page)
         {
-            return View(await _context.Employee.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+
+            var employees = from e in _context.Employee
+                            select e;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                employees = employees.Where(e => e.Name.ToLower().Contains(searchString.ToLower()));
+            }
+
+            employees = employees.OrderByDescending(e => e.Id);
+
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            var pagedEmployees = await employees.ToPagedListAsync(pageNumber, pageSize);
+
+            return View(pagedEmployees);
+
         }
 
         // GET: Employees/Details/5
