@@ -2,6 +2,7 @@ using CarRent.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace CarRent
 {
     public class Program
@@ -19,13 +20,23 @@ namespace CarRent
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddControllersWithViews();
-
+            builder.Services.AddControllersWithViews().AddNewtonsoftJson();
             builder.Services.AddRazorPages();
+
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
 
 
@@ -35,6 +46,9 @@ namespace CarRent
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
+                app.UseMigrationsEndPoint();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             else
             {
@@ -47,13 +61,14 @@ namespace CarRent
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthorization();
-
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+            app.MapControllers();
 
             using(var scope = app.Services.CreateScope())
             {

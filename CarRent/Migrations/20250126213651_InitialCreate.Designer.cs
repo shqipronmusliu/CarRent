@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRent.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250125214049_FifthCreate")]
-    partial class FifthCreate
+    [Migration("20250126213651_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,39 @@ namespace CarRent.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CarRent.Models.Booking", b =>
+                {
+                    b.Property<int>("BookingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("BookingId");
+
+                    b.HasIndex("CarId");
+
+                    b.ToTable("Bookings");
+                });
 
             modelBuilder.Entity("CarRent.Models.Car", b =>
                 {
@@ -65,9 +98,7 @@ namespace CarRent.Migrations
                     b.ToTable("Cars");
                 });
 
-<<<<<<<< HEAD:CarRent/Migrations/ApplicationDbContextModelSnapshot.cs
-========
-            modelBuilder.Entity("CarRent.Models.Customer", b =>
+            modelBuilder.Entity("CarRent.Models.Contact", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,24 +106,54 @@ namespace CarRent.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("SentAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Contacts");
+                });
+
+            modelBuilder.Entity("CarRent.Models.Discount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DiscountCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("DiscountDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("DiscountPercentage")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("CarRent.Models.Employee", b =>
@@ -161,7 +222,7 @@ namespace CarRent.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Incident_1");
+                    b.ToTable("Incident");
                 });
 
             modelBuilder.Entity("CarRent.Models.Payment", b =>
@@ -233,10 +294,9 @@ namespace CarRent.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Service");
+                    b.ToTable("Services");
                 });
 
->>>>>>>> e5162e0f0c0972f2c7c7176b1dde23931e746f40:CarRent/Migrations/20250125214049_FifthCreate.Designer.cs
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -301,11 +361,6 @@ namespace CarRent.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -357,10 +412,6 @@ namespace CarRent.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator().HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -448,17 +499,17 @@ namespace CarRent.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-<<<<<<<< HEAD:CarRent/Migrations/ApplicationDbContextModelSnapshot.cs
-            modelBuilder.Entity("CarRent.Models.ApplicationUser", b =>
+            modelBuilder.Entity("CarRent.Models.Booking", b =>
                 {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+                    b.HasOne("CarRent.Models.Car", "Cars")
+                        .WithMany("Bookings")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Navigation("Cars");
+                });
 
-                    b.HasDiscriminator().HasValue("ApplicationUser");
-========
             modelBuilder.Entity("CarRent.Models.Incident", b =>
                 {
                     b.HasOne("CarRent.Models.Service", "Service")
@@ -479,7 +530,6 @@ namespace CarRent.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
->>>>>>>> e5162e0f0c0972f2c7c7176b1dde23931e746f40:CarRent/Migrations/20250125214049_FifthCreate.Designer.cs
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -531,6 +581,11 @@ namespace CarRent.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CarRent.Models.Car", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

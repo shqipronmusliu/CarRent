@@ -34,5 +34,6 @@ namespace CarRent.Models
 
         public string? UserId { get; set; }
         public bool IsReserved { get; set; }
+        public  ICollection<Booking>? Bookings { get; set; }
     }
 }

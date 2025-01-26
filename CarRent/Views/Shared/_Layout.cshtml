@@ -25,29 +25,32 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="">Cars</a>
                         </li>
-<<<<<<< HEAD
-=======
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Customers" asp-action="">Customers</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Contacts" asp-action="">Contact</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Payments" asp-action="">Payments</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Bookings" asp-action="">Booking</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="">Employee</a>
-                        </li>
+                        @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Payments" asp-action="">Payments</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="">Employee</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Incidents" asp-action="">Incidents</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Discounts" asp-action="">Discounts</a>
+                                </li>
+                            }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Services" asp-action="">Services</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Incidents" asp-action="">Incidents</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Discounts" asp-action="">Discounts</a>
-                        </li>
                         
-                    
->>>>>>> e5162e0f0c0972f2c7c7176b1dde23931e746f40
+                        
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -69,5 +72,16 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script type="text/javascript">
+        var sessionTimeout = 30*60*1000; 
+
+        setTimeout(function () {
+            if (@User.Identity?.IsAuthenticated.ToString().ToLower()) {
+                alert("Your session has ended. You will be logged out.");
+                document.getElementById("logoutForm").submit();
+            }
+        }, sessionTimeout);
+    </script>
 </body>
 </html>

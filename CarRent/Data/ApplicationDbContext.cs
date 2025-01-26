@@ -11,30 +11,33 @@ namespace CarRent.Data
         {
         }
         public DbSet<Car> Cars { get; set; }
-<<<<<<< HEAD
-=======
-        public DbSet<Customer> Customers { get; set; }
+
         public DbSet<Payment> Payments { get; set; }
         public DbSet<CarRent.Models.Employee> Employee { get; set; } = default!;
         public DbSet<Salary> Salaries{ get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Incident> Incidents{ get; set; }
         public DbSet<Discount> Discounts { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
 
 
->>>>>>> e5162e0f0c0972f2c7c7176b1dde23931e746f40
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-<<<<<<< HEAD
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Cars)
+                .WithMany(c => c.Bookings)
+                .HasForeignKey(b => b.CarId);
+
             modelBuilder.Entity<Car>()
                 .Property(c => c.Price)
                 .HasColumnType("decimal(18,2)");
-        }
-=======
+
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
                 .HasPrecision(18, 2);
@@ -53,8 +56,5 @@ namespace CarRent.Data
 
         }
         public DbSet<CarRent.Models.Incident> Incident_1 { get; set; } = default!;
-       
-
->>>>>>> e5162e0f0c0972f2c7c7176b1dde23931e746f40
     }
 }

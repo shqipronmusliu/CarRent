@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+
 
 namespace CarRent.Controllers
 {
@@ -21,10 +23,16 @@ namespace CarRent.Controllers
 
         public async Task <IActionResult> Index()
         {
+            HttpContext.Session.SetString("UserMessage", "Welcome back!");
+
+            var userMessage = HttpContext.Session.GetString("UserMessage");
+
             var recentCars = await _context.Cars
             .OrderByDescending(c => c.Id)
             .Take(3) 
             .ToListAsync();
+
+            ViewData["UserMessage"] = userMessage;
 
             return View(recentCars);
         }

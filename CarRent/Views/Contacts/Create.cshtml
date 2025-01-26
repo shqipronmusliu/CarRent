@@ -1,0 +1,79 @@
+﻿@model CarRent.Models.Contact
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if(User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Admin")){
+        <h1>Create</h1>
+    }
+}
+
+<h4>Contact</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="contactForm" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Message" class="control-label"></label>
+                <textarea asp-for="Message" class="form-control" ></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SentAt" class="control-label"></label>
+                <input asp-for="SentAt" class="form-control" />
+                <span asp-validation-for="SentAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@if(User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Admin")){
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+    }
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            $.ajax({
+                url: '@Url.Action("Create")',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    alert("You have contacted us successfully! Wait for our response.");
+                    $('#contactForm')[0].reset();
+                },
+                error: function(response) {
+                    alert("Something went wrong. Please try again.");
+                }
+            });
+        });
+    </script>
+}

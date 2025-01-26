@@ -20,9 +20,11 @@ namespace CarRent.Controllers
     public class CarsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public CarsController(ApplicationDbContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+        public CarsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Cars
