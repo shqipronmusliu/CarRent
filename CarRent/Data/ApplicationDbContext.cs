@@ -22,7 +22,11 @@ namespace CarRent.Data
 
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
-                .HasPrecision(18, 2); 
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Salary>()
+              .Property(s => s.Amount)
+              .HasPrecision(18, 2);
         }
 
     }
