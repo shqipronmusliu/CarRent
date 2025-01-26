@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRent.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:CarRent/Migrations/20250125052854_InitialCreate.Designer.cs
-    [Migration("20250125052854_InitialCreate")]
+    [Migration("20250124235246_InitialCreate")]
     partial class InitialCreate
-========
-    [Migration("20250125022906_SecondCreate")]
-    partial class SecondCreate
->>>>>>>> e5162e0f0c0972f2c7c7176b1dde23931e746f40:CarRent/Migrations/20250125022906_SecondCreate.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,26 +35,18 @@ namespace CarRent.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Model")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UserId")
+                    b.Property<string>("Price")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -67,8 +54,6 @@ namespace CarRent.Migrations
                     b.ToTable("Cars");
                 });
 
-<<<<<<<< HEAD:CarRent/Migrations/20250125052854_InitialCreate.Designer.cs
-========
             modelBuilder.Entity("CarRent.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -97,37 +82,6 @@ namespace CarRent.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("CarRent.Models.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employee");
-                });
-
             modelBuilder.Entity("CarRent.Models.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -153,7 +107,6 @@ namespace CarRent.Migrations
                     b.ToTable("Payments");
                 });
 
->>>>>>>> e5162e0f0c0972f2c7c7176b1dde23931e746f40:CarRent/Migrations/20250125022906_SecondCreate.Designer.cs
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
