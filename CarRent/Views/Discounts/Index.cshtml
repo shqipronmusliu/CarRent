@@ -7,6 +7,20 @@
 
 <h1>Index</h1>
 
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <input type="text" name="SearchString" class="form-control" placeholder="Search by discount code..." value="@ViewData["SearchString"]" />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+@if (!String.IsNullOrEmpty(ViewData["CurrentFilter"]?.ToString()))
+{
+    <p>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </p>
+}
+
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -52,3 +66,10 @@
 }
     </tbody>
 </table>
+
+<ul class="pagination">
+    <li class="active page-item">
+        <span class="page-link">1</span>
+    </li>
+    
+</ul>
