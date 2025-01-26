@@ -21,3 +21,8 @@ body {
   margin-bottom: 60px;
 }
 
+img{
+    height:200px;
+    object-fit:cover;
+}
+
